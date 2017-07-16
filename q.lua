@@ -146,9 +146,42 @@ function isCol(col1, col2, n)
     local r2,g2,b2
     r1,g1,b1 = colorToRGB(col1,"BBGGRR")
     r2,g2,b2 = colorToRGB(col2,"BBGGRR")
+	--[[
     if (1 - (math.abs(r1 - r2) + math.abs(g1 - g2) + math.abs(b1 - b2))) / 255 / 3 >= n then 
 		return true
     end
+	]]
+	-- 默认偏差值101010
+	for a=16,0,-1 do
+		for b=16,0,-1 do
+			for c=16,0,-1 do
+				-- +++
+				if 1 - (math.abs((r1+a) - (r2+a)) + math.abs((g1+b) - (g2+b)) + math.abs((b1+c) - (b2+c))) / 255 / 3 >= n then 
+					return true
+				end
+				-- ++-
+				if 1 - (math.abs((r1+a) - (r2+a)) + math.abs((g1+b) - (g2+b)) + math.abs((b1-c) - (b2-c))) / 255 / 3 >= n then 
+					return true
+				end
+				-- +--
+				if 1 - (math.abs((r1+a) - (r2+a)) + math.abs((g1-b) - (g2-b)) + math.abs((b1-c) - (b2-c))) / 255 / 3 >= n then 
+					return true
+				end
+				-- ---
+				if 1 - (math.abs((r1-a) - (r2-a)) + math.abs((g1-b) - (g2-b)) + math.abs((b1-c) - (b2-c))) / 255 / 3 >= n then 
+					return true
+				end
+				-- --+
+				if 1 - (math.abs((r1-a) - (r2-a)) + math.abs((g1-b) - (g2-b)) + math.abs((b1+c) - (b2+c))) / 255 / 3 >= n then 
+					return true
+				end
+				-- -++
+				if 1 - (math.abs((r1-a) - (r2-a)) + math.abs((g1+b) - (g2+b)) + math.abs((b1+c) - (b2+c))) / 255 / 3 >= n then 
+					return true
+				end
+			end
+		end
+	end
 	return false
 end
 
